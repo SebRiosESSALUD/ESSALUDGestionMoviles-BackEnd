@@ -1,7 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from src.routes.auth import router as login_router
 
 app = FastAPI()
+
+app.include_router(login_router, prefix="/login")
 
 # Configuración de CORS
 app.add_middleware(
