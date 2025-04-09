@@ -2,13 +2,13 @@ from pydantic import BaseModel, EmailStr
 from typing import Optional
 
 class RolBase(BaseModel):
-    nombre: str
+    nombre_rol: str   # <--- Mismo nombre que en la base de datos
 
 class RolRead(RolBase):
     id_rol: int
 
     class Config:
-        from_attributes = True  # Permite mapear desde SQLAlchemy a Pydantic
+        from_attributes = True
 
 class UsuarioBase(BaseModel):
     nombre: str
@@ -16,11 +16,11 @@ class UsuarioBase(BaseModel):
 
 class UsuarioCreate(UsuarioBase):
     password: str
-    id_rol: Optional[int] = 2  # Por defecto, asignamos el rol 2 (ejemplo: usuario normal)
+    id_rol: Optional[int] = 2
 
 class UsuarioRead(UsuarioBase):
     id_usuario: int
-    rol: Optional[RolRead]  # Para incluir detalles del rol al leer usuarios
+    rol: Optional[RolRead]
 
     class Config:
         from_attributes = True
