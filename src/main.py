@@ -10,7 +10,7 @@ app.include_router(usuarios_router)
 # Configuración de CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Permite peticiones desde Vite
+    allow_origins=["*"],  # Cambiar esto solamente a las direcciones reales una vexz colocado en produccion
     allow_credentials=True,
     allow_methods=["*"],  # Permite todos los métodos (GET, POST, etc.)
     allow_headers=["*"],  # Permite todos los headers
