@@ -1,19 +1,34 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from src.routes.auth import router as usuarios_router  # Cambié el alias para mayor claridad
+from src.database import engine, Base
+from src.routes.auth import router as usuarios_router
+from src.crud import devices_router, operadoras_router, modelos_router
 
 app = FastAPI()
 
-# Incluir rutas
+# Aquí se configura la creación de tablas al arrancar el servidor
+@app.on_event("startup")
+async def on_startup():
+    # Ejecutar DDL de forma asíncrona para crear las tablas definidas en los modelos
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+
+# Rutas
+# (Las tablas ya se crean en on_startup)
+
 app.include_router(usuarios_router)
+app.include_router(devices_router)
+app.include_router(operadoras_router)
+app.include_router(modelos_router)
 
 # Configuración de CORS
-app.add_middleware(
+tija = app  # alias para evitar confusión con nombre de variable
+tija.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Cambiar esto solamente a las direcciones reales una vexz colocado en produccion
+    allow_origins=["*"],  # En producción, especificar orígenes reales
     allow_credentials=True,
-    allow_methods=["*"],  # Permite todos los métodos (GET, POST, etc.)
-    allow_headers=["*"],  # Permite todos los headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 @app.get("/")
